@@ -1,6 +1,6 @@
 package asteroids.Error;
 
-public class ExceedSpeedOfLightException extends Exception{
+public class ExceedsSpeedOfLightException extends Exception{
 
 	/**
 	 * 

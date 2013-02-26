@@ -12,6 +12,12 @@ public class Ship {
 	private double direction;
 	private double radius;
 
+	public Ship(Position pos,Velocity vel, double direction, double radius){
+		this.pos=pos;
+		this.vel=vel;
+		this.direction=direction;
+		this.radius=radius;
+	}
 	public Position getPos() {
 		return pos;
 	}
@@ -65,11 +71,33 @@ public class Ship {
 		return !(time < 0);
 	}
 	
+	private boolean isValidVelocity(Velocity velocity){
+		return (velocity.getNorm()<=Velocity.getSpeedOfLight());
+	}
+	
 	public void turn(double angle){
 		setDirection(getDirection() + angle);
 	}
 	// TODO implementeren: een add methode in velocity. + testen
-	public void thrust(double direction, double amount){
+	
+	public void thrust(double direction, double amount) throws ExceedsSpeedOfLightException{
+		
+		Velocity gainedSpeed = new Velocity(amount*Math.cos(direction),amount*Math.sin(direction));
+		Velocity newSpeed = new Velocity(getVel().getVelX(), getVel().getVelY());
+		newSpeed.add(gainedSpeed);
+		
+		try{if(!isValidVelocity(newSpeed)){
+			throw new ExceedsSpeedOfLightException();
+		}
+		
+		vel.add(gainedSpeed);
+		}
+		catch(ExceedsSpeedOfLightException tohigh){
+			double correctingFactor = newSpeed.getNorm()/Velocity.getSpeedOfLight();
+			Velocity correctedSpeed = new Velocity (newSpeed.getVelX()/correctingFactor,newSpeed.getVelY()/correctingFactor);
+			setVel(correctedSpeed);
+	
+		}
 		
 	}
 	//TODO implementeren: testen of schip1 en 2 gelijk zijn
