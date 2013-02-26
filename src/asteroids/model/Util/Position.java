@@ -1,5 +1,7 @@
 package asteroids.model.Util;
 
+import be.kuleuven.cs.som.annotate.*;
+
 public class Position {
 	
 private double posX;

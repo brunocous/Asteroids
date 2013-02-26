@@ -2,6 +2,7 @@ package asteroids.model;
 
 import asteroids.Error.*;
 import asteroids.model.Util.*;
+import be.kuleuven.cs.som.annotate.*;
 
 public class Ship {
 
