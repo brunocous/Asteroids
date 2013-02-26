@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import asteroids.Asteroids;
 import asteroids.Error.*;
 import asteroids.model.Util.*;
 import be.kuleuven.cs.som.annotate.*;
@@ -52,7 +53,7 @@ public class Ship {
 	//TODO afmaken
 	public void Move(double elapsedTime) throws NegativeTimeException{
 		try{if(!isValidElapsedTime(elapsedTime)){
-			throw NegativeTimeException ;
+			throw new NegativeTimeException() ;
 		}
 			Position displacement = new Position(vel.getVelX()*elapsedTime, vel.getVelY()*elapsedTime);
 			pos.add(displacement);
