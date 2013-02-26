@@ -1,6 +1,7 @@
 package asteroids.model;
 
 import asteroids.Asteroids;
+import asteroids.Util;
 import asteroids.Error.*;
 import asteroids.model.Util.*;
 import be.kuleuven.cs.som.annotate.*;
@@ -56,13 +57,17 @@ public class Ship {
 	 * @post 
 	 * TODO exceptions checken.
 	 */
-	//TODO afmaken
+	
 	public void Move(double elapsedTime) throws NegativeTimeException{
+		
 		try{if(!isValidElapsedTime(elapsedTime)){
+			
 			throw new NegativeTimeException() ;
+			
 		}
 			Position displacement = new Position(vel.getVelX()*elapsedTime, vel.getVelY()*elapsedTime);
 			pos.add(displacement);
+			
 		} catch (NegativeTimeException neg){
 			
 		}
@@ -136,8 +141,49 @@ public class Ship {
 		
 	}
 	
-	public boolean collide(Ship ship1, Ship ship2){
+	public double scalarProduct(double x1, double y1, double x2, double y2){
 		
-		return true;
+		return x1*y1+x2*y2;
 	}
-}
+	
+
+	public double getTimeToCollision(Ship ship1, Ship ship2){
+		
+		double deltavx = ship2.getVel().getVelX()- ship1.getVel().getVelX();
+		double deltavy = ship2.getVel().getVelY()- ship1.getVel().getVelY();
+		double deltarx = ship2.getPos().getPosX()- ship1.getPos().getPosX();
+		double deltary = ship2.getPos().getPosY()- ship1.getPos().getPosY();
+		double sigma = ship1.getRadius()+ship2.getRadius();
+		double d = Math.pow(scalarProduct(deltavx, deltavy, deltarx, deltary), 2)-scalarProduct(deltavx,deltavy,deltavx,deltavy)*(scalarProduct(deltarx,deltary,deltarx,deltary)-Math.pow(sigma, 2));
+		
+		if(Util.fuzzyLessThanOrEqualTo(-scalarProduct(deltavx,deltavy,deltarx,deltary),0) || Util.fuzzyLessThanOrEqualTo(d,0) ){
+			return Double.POSITIVE_INFINITY;
+		}
+		else{
+			return -(scalarProduct(deltavx, deltavy, deltarx,deltary)+Math.sqrt(d))/scalarProduct(deltavx,deltavy,deltavx,deltavy);
+		}
+	}
+	
+	public Position getCollisionPosition(Ship ship1, Ship ship2){
+		
+		double deltaT= getTimeToCollision(ship1,ship2);
+		
+		if(deltaT==Double.POSITIVE_INFINITY){
+			
+			return null;
+			
+		}
+		else{
+			
+			double xCoordCollision = ship1.getPos().getPosX()+deltaT*ship1.getVel().getVelX();
+			double yCoordCollision = ship1.getPos().getPosY()+deltaT*ship1.getVel().getVelY();
+			
+			Position collisionPoint = new Position(xCoordCollision, yCoordCollision);
+			return collisionPoint;
+			
+		}
+		}
+		
+		
+	}
+
