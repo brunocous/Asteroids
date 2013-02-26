@@ -53,4 +53,9 @@ public void add(Position posToAdd){
 	setPosY(posToAdd.getPosY() + getPosY());
 }
 
+public double getDistanceTo(Position position){
+	double distance = Math.sqrt(Math.pow(getPosX()-position.getPosX(),2)+Math.pow(getPosY()-position.getPosY(),2));
+	return distance;
+}
+
 }

@@ -39,7 +39,7 @@ public class Ship {
 	}
 //TODO simpelste vorm
 	public void setDirection(double direction) {
-		this.direction = direction;
+		this.direction = direction%(2*Math.PI);
 	}
 
 	public double getRadius() {
@@ -87,30 +87,57 @@ public class Ship {
 		newSpeed.add(gainedSpeed);
 		
 		try{if(!isValidVelocity(newSpeed)){
+			
 			throw new ExceedsSpeedOfLightException();
 		}
 		
 		vel.add(gainedSpeed);
 		}
 		catch(ExceedsSpeedOfLightException tohigh){
+			
 			double correctingFactor = newSpeed.getNorm()/Velocity.getSpeedOfLight();
 			Velocity correctedSpeed = new Velocity (newSpeed.getVelX()/correctingFactor,newSpeed.getVelY()/correctingFactor);
 			setVel(correctedSpeed);
-	
 		}
 		
 	}
 	//TODO implementeren: testen of schip1 en 2 gelijk zijn
 	public double getDistanceBetween(Ship ship1, Ship ship2){
-		return 0.0;
+		
+		if(ship1==ship2){
+			return 0.0;
+		}
+		
+		else{
+			
+		double distanceBetweenCentres = ship1.getPos().getDistanceTo(ship2.getPos());
+		double sumOfRadii= ship1.getRadius()+ship2.getRadius();
+		double distance = distanceBetweenCentres - sumOfRadii;
+		return distance;
+		
+		}
+		
 	}
 	//TODO documenteren
 	public boolean overlap(Ship ship1, Ship ship2){
-		if(getDistanceBetween(ship1,ship2) <=0){
+		
+		if(ship1==ship2){
+			
 			return true;
+			
+		} else if(asteroids.Util.fuzzyLessThanOrEqualTo(getDistanceBetween(ship1,ship2),0)){
+			
+			return true;
+			
 		} else {
+			
 			return false;
 		}
 		
+	}
+	
+	public boolean collide(Ship ship1, Ship ship2){
+		
+		return true;
 	}
 }
