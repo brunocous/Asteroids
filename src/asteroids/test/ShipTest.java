@@ -48,8 +48,8 @@ public class ShipTest {
 		positiveVelocityShip = new Ship(positivePosition, positiveVelocity, 0.0,1.0);
 		
 		zeroRadiusShip = new Ship(positivePosition, positiveVelocity, 0.0, 0.0);
-		negativeRadiusShip = new Ship(positivePosition, positiveVelocity, 0.0, -20.0);
-		positiveRadiusShip = new Ship(positivePosition, positiveVelocity, 0.0, 20.0);
+		negativeRadiusShip = new Ship(positivePosition, positiveVelocity, 0.0, -10.0);
+		positiveRadiusShip = new Ship(positivePosition, positiveVelocity, 0.0, 10.0);
 		infiniteRadiusShip = new Ship(positivePosition, positiveVelocity, 0.0, Double.POSITIVE_INFINITY);
 		
 		negativePositionShip = new Ship(negativePosition, positiveVelocity, 0.0,1.0);
