@@ -5,9 +5,12 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import asteroids.Util;
 import asteroids.model.Ship;
 import asteroids.model.Util.Position;
 import asteroids.model.Util.Velocity;
+import asteroids.Error.*;
 
 public class ShipTest {
 
@@ -72,25 +75,52 @@ public class ShipTest {
 	@Test
 	public void extendedConstructor_LegalCase(){
 		Ship theShip = new Ship(positivePosition, positiveVelocity, Math.PI, 2.0);
-		assertTrue((positivePosition.getPosX() == theShip.getPos().getPosX()));
-		assertTrue((positivePosition.getPosY() == theShip.getPos().getPosY()));
-		assertTrue((positiveVelocity.getVelX() == theShip.getVel().getVelX()));
-		assertTrue((positiveVelocity.getVelY() == theShip.getVel().getVelY()));
-		assertTrue((Math.PI == theShip.getDirection()));
-		assertTrue((2.0 == theShip.getRadius()));
+		assertTrue(Util.fuzzyEquals(positivePosition.getPosX(), theShip.getPos().getPosX()) );
+		assertTrue(Util.fuzzyEquals(positivePosition.getPosY(), theShip.getPos().getPosY()));
+		assertTrue(Util.fuzzyEquals(positiveVelocity.getVelX(), theShip.getVel().getVelX()));
+		assertTrue(Util.fuzzyEquals(positiveVelocity.getVelY(), theShip.getVel().getVelY()));
+		assertTrue(Util.fuzzyEquals(Math.PI, theShip.getDirection()));
+		assertTrue(Util.fuzzyEquals(2.0, theShip.getRadius()));
 	}
 	//TODO bespreken hoe dit moet afgehandeld worden. Via exceedspeedoflightexception, of toelaten of moet gwn lichtsnelheid worden.
 	@Test
 	public void extendendConstructor_infiniteSpeedCase(){
 		Ship theShip = new Ship(positivePosition, positiveInfiniteVelocity, Math.PI, 2.0);
-		assertTrue((theShip.getVel().getVelX() == positiveInfiniteVelocity.getVelX()));
+		assertTrue(Util.fuzzyEquals(theShip.getVel().getVelX(), positiveInfiniteVelocity.getVelX()));
 	}
 	
 	@Test
 	public void extendenConstructor_infinitePositionCase(){
 		Ship theShip = new Ship(infinitePosition, positiveVelocity, Math.PI, 2.0);
-		assertTrue((theShip.getPos().getPosX() == infinitePosition.getPosX()));
+		assertTrue(Util.fuzzyEquals(theShip.getPos().getPosX(), infinitePosition.getPosX()));
+	}
+	
+	@Test 
+	public void move_infiniteBorderCase(){
+		infinitePositionShip.move(0.0);
+		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosX(), infinitePosition.getPosX()));
+		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosY(), infinitePosition.getPosY()));
 	}
 	
 	@Test
+	public void move_overInfiniteBorderCase(){
+		
+	}
+	@Test
+	public void move_underInfiniteBorderCase(){
+		
+	}
+	@Test
+	public void move_toZeroPosition(){
+		
+	}
+	@Test
+	public void move_noChange(){
+		
+	}
+	@Test (expected = NegativeTimeException.class)
+	public void move_negativeTime(){
+		
+		fail("Exception Expected!");
+	}
 }

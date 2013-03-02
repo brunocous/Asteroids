@@ -60,7 +60,7 @@ public class Ship implements IShip{
 	 * TODO exceptions checken.
 	 */
 	
-	public void Move(double elapsedTime) throws NegativeTimeException, OverflowException{
+	public void move(double elapsedTime) throws NegativeTimeException, OverflowException{
 		
 		try{if(!isValidElapsedTime(elapsedTime)){
 			
