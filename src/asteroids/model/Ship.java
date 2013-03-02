@@ -1,12 +1,12 @@
 package asteroids.model;
 
-import asteroids.Asteroids;
 import asteroids.Util;
 import asteroids.Error.*;
 import asteroids.model.Util.*;
+import asteroids.IShip;
 import be.kuleuven.cs.som.annotate.*;
 
-public class Ship {
+public class Ship implements IShip{
 
 	private Position pos;
 	private Velocity vel;

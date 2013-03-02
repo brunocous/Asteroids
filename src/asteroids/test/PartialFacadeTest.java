@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import asteroids.IFacade;
 import asteroids.IShip;
-import asteroids.ModelException;
+import asteroids.Error.ModelException;
 import asteroids.Util;
 import asteroids.model.Facade;
 
