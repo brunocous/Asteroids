@@ -73,7 +73,7 @@ public class ShipTest {
 	}
 
 	@Test
-	public void extendedConstructor_LegalCase(){
+	public void extendedConstructor_LegalCase() throws Exception{
 		Ship theShip = new Ship(positivePosition, positiveVelocity, Math.PI, 2.0);
 		assertTrue(Util.fuzzyEquals(positivePosition.getPosX(), theShip.getPos().getPosX()) );
 		assertTrue(Util.fuzzyEquals(positivePosition.getPosY(), theShip.getPos().getPosY()));
@@ -84,51 +84,51 @@ public class ShipTest {
 	}
 	//TODO bespreken hoe dit moet afgehandeld worden. Via exceedspeedoflightexception, of toelaten of moet gwn lichtsnelheid worden.
 	@Test
-	public void extendendConstructor_infiniteSpeedCase(){
+	public void extendendConstructor_infiniteSpeedCase() throws Exception{
 		Ship theShip = new Ship(positivePosition, positiveInfiniteVelocity, Math.PI, 2.0);
 		assertTrue(Util.fuzzyEquals(theShip.getVel().getVelX(), positiveInfiniteVelocity.getVelX()));
 	}
 	
 	@Test
-	public void extendenConstructor_infinitePositionCase(){
+	public void extendenConstructor_infinitePositionCase() throws Exception{
 		Ship theShip = new Ship(infinitePosition, positiveVelocity, Math.PI, 2.0);
 		assertTrue(Util.fuzzyEquals(theShip.getPos().getPosX(), infinitePosition.getPosX()));
 	}
 	
 	@Test 
-	public void move_infiniteBorderCase(){
+	public void move_infiniteBorderCase() throws Exception{
 		infinitePositionShip.move(0.0);
 		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosX(), infinitePosition.getPosX()));
 		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosY(), infinitePosition.getPosY()));
 	}
 	
 	@Test
-	public void move_overInfiniteBorderCase(){
+	public void move_overInfiniteBorderCase() throws Exception{
 		infinitePositionShip.move(10.0);
 		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosX(), infinitePosition.getPosX()));
 		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosY(), infinitePosition.getPosY()));
 	}
 	@Test
-	public void move_underInfiniteBorderCase(){
+	public void move_underInfiniteBorderCase() throws Exception{
 		infinitePositionShip.setDirection(4*Math.PI/3);
 		infinitePositionShip.move(10.0);
 		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosX(), infinitePosition.getPosX() + 10.0*infinitePositionShip.getVel().getVelX()));
 		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosY(), infinitePosition.getPosY() + 10.0*infinitePositionShip.getVel().getVelY()));
 	}
 	@Test
-	public void move_toZeroPosition(){
+	public void move_toZeroPosition() throws Exception{
 		negativePositionShip.move(1.0);
 		assertTrue(Util.fuzzyEquals(negativePositionShip.getPos().getPosX(), zeroPosition.getPosX()));
 		assertTrue(Util.fuzzyEquals(negativePositionShip.getPos().getPosY(), zeroPosition.getPosY()));
 	}
 	@Test
-	public void move_noChange(){
+	public void move_noChange() throws Exception{
 		positivePositionShip.move(0.0);
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getPos().getPosX(), positivePosition.getPosX()));
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getPos().getPosY(), positivePosition.getPosY()));
 	}
 	@Test (expected = NegativeTimeException.class)
-	public void move_negativeTime(){
+	public void move_negativeTime() throws Exception{
 		positivePositionShip.move(-10);
 		fail("Exception Expected!");
 	}
@@ -146,7 +146,7 @@ public class ShipTest {
 	}
 	@Test 
 	public void turn_greaterThan2PiCase(){
-		positivePositionShip.turn(10*Math.PI);
+		positivePositionShip.turn(9*Math.PI);
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Math.PI));
 	}
 	@Test
@@ -155,9 +155,61 @@ public class ShipTest {
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Double.POSITIVE_INFINITY%(Math.PI*2)));
 	}
 	@Test
+	public void turn_negativeLessThan2PiCase(){
+		positivePositionShip.turn(-Math.PI);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), -Math.PI));
+	}
+	@Test 
+	public void turn_negativeGreaterThan2PiCase(){
+		positivePositionShip.turn(-9*Math.PI);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), -Math.PI));
+	}
+	@Test
 	public void turn_negativeInfiniteCase(){
 		positivePositionShip.turn(Double.NEGATIVE_INFINITY);
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Double.NEGATIVE_INFINITY%(Math.PI*2)));
+	}
+	@Test
+	public void thrust_sameDirectionPositiveAmount() throws Exception{
+		positivePositionShip.thrust(positivePositionShip.getDirection(), 10.0);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelX(), positiveVelocity.getVelX() + 10.0*Math.cos(positivePositionShip.getDirection())));
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelY(), positiveVelocity.getVelY() + 10.0*Math.sin(positivePositionShip.getDirection())));	
+	}
+	@Test
+	public void thrust_sameDirectionNegativeAmount() throws Exception{
+		positivePositionShip.thrust(positivePositionShip.getDirection(), -10.0);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelX(), positiveVelocity.getVelX() + (-10.0)*Math.cos(positivePositionShip.getDirection())));
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelY(), positiveVelocity.getVelY() + (-10.0)*Math.sin(positivePositionShip.getDirection())));	
+	}
+	@Test
+	public void thrust_otherDirectionPositiveAmount() throws Exception{
+		positivePositionShip.thrust(Math.PI/2, 10.0);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelX(), positiveVelocity.getVelX() + 10.0*Math.cos(0.0)));
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelY(), positiveVelocity.getVelY() + 10.0*Math.sin(0.0)));	
+	}
+	@Test
+	public void thrust_otherDirectionNegativeAmount() throws Exception{
+		positivePositionShip.thrust(Math.PI/2, -10.0);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelX(), positiveVelocity.getVelX() + (-10.0)*Math.cos(0.0)));
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelY(), positiveVelocity.getVelY() + (-10.0)*Math.sin(0.0)));
+	}
+	@Test
+	public void thrust_speedOfLight() throws Exception{
+		speedOfLightShip.thrust(speedOfLightShip.getDirection(), 0.0);
+		assertTrue(Util.fuzzyEquals(speedOfLightShip.getVel().getVelX(), speedOfLightVelocity.getVelX() + speedOfLightShip.getDirection()*Math.cos(0.0)));
+		assertTrue(Util.fuzzyEquals(speedOfLightShip.getVel().getVelY(), speedOfLightVelocity.getVelY() + speedOfLightShip.getDirection()*Math.sin(0.0)));
+	}
+	@Test
+	public void thrust_overSpeedOfLight() throws Exception{
+		speedOfLightShip.thrust(speedOfLightShip.getDirection(), 10.0);
+		assertTrue(Util.fuzzyEquals(speedOfLightShip.getVel().getVelX(), speedOfLightVelocity.getVelX() + speedOfLightShip.getDirection()*Math.cos(10.0)));
+		assertTrue(Util.fuzzyEquals(speedOfLightShip.getVel().getVelY(), speedOfLightVelocity.getVelY() + speedOfLightShip.getDirection()*Math.sin(10.0)));
+	}
+	@Test
+	public void thrust_underSpeedOfLight() throws Exception{
+		speedOfLightShip.thrust(speedOfLightShip.getDirection(), -10.0);
+		assertTrue(Util.fuzzyEquals(speedOfLightShip.getVel().getVelX(), speedOfLightVelocity.getVelX() + speedOfLightShip.getDirection()*Math.cos(-10.0)));
+		assertTrue(Util.fuzzyEquals(speedOfLightShip.getVel().getVelY(), speedOfLightVelocity.getVelY() + speedOfLightShip.getDirection()*Math.sin(-10.0)));
 	}
 	
 }
