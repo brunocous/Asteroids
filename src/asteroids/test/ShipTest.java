@@ -94,6 +94,11 @@ public class ShipTest {
 		Ship theShip = new Ship(infinitePosition, positiveVelocity, Math.PI, 2.0);
 		assertTrue(Util.fuzzyEquals(theShip.getPos().getPosX(), infinitePosition.getPosX()));
 	}
+	//TODO radius moet groter of gelijk zijn aan nul. Exception moet nog aangemaakt worden in ship.
+	@Test
+	public void extendenConstructor_negativeRadiusCase() throws Exception{
+		Ship theShip = new Ship(positivePosition, positiveVelocity, Math.PI, -2.0);
+	}
 	
 	@Test 
 	public void move_infiniteBorderCase() throws Exception{
