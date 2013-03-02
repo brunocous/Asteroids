@@ -19,6 +19,7 @@ public class Ship implements IShip{
 		this.direction=direction;
 		this.radius=radius;
 	}
+	
 	public Position getPos() {
 		return pos;
 	}
