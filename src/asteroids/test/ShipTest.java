@@ -104,23 +104,60 @@ public class ShipTest {
 	
 	@Test
 	public void move_overInfiniteBorderCase(){
-		
+		infinitePositionShip.move(10.0);
+		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosX(), infinitePosition.getPosX()));
+		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosY(), infinitePosition.getPosY()));
 	}
 	@Test
 	public void move_underInfiniteBorderCase(){
-		
+		infinitePositionShip.setDirection(4*Math.PI/3);
+		infinitePositionShip.move(10.0);
+		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosX(), infinitePosition.getPosX() + 10.0*infinitePositionShip.getVel().getVelX()));
+		assertTrue(Util.fuzzyEquals(infinitePositionShip.getPos().getPosY(), infinitePosition.getPosY() + 10.0*infinitePositionShip.getVel().getVelY()));
 	}
 	@Test
 	public void move_toZeroPosition(){
-		
+		negativePositionShip.move(1.0);
+		assertTrue(Util.fuzzyEquals(negativePositionShip.getPos().getPosX(), zeroPosition.getPosX()));
+		assertTrue(Util.fuzzyEquals(negativePositionShip.getPos().getPosY(), zeroPosition.getPosY()));
 	}
 	@Test
 	public void move_noChange(){
-		
+		positivePositionShip.move(0.0);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getPos().getPosX(), positivePosition.getPosX()));
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getPos().getPosY(), positivePosition.getPosY()));
 	}
 	@Test (expected = NegativeTimeException.class)
 	public void move_negativeTime(){
-		
+		positivePositionShip.move(-10);
 		fail("Exception Expected!");
 	}
+	
+	@Test
+	public void turn_zeroAngle(){
+		positivePositionShip.turn(0.0);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), 0.0));
+	}
+	@Test
+	//TODO check schrijfwijze "than"
+	public void turn_lessThan2PiCase(){
+		positivePositionShip.turn(Math.PI);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Math.PI));
+	}
+	@Test 
+	public void turn_greaterThan2PiCase(){
+		positivePositionShip.turn(10*Math.PI);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Math.PI));
+	}
+	@Test
+	public void turn_infiniteCase(){
+		positivePositionShip.turn(Double.POSITIVE_INFINITY);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Double.POSITIVE_INFINITY%(Math.PI*2)));
+	}
+	@Test
+	public void turn_negativeInfiniteCase(){
+		positivePositionShip.turn(Double.NEGATIVE_INFINITY);
+		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Double.NEGATIVE_INFINITY%(Math.PI*2)));
+	}
+	
 }
