@@ -4,6 +4,7 @@ import asteroids.Util;
 import asteroids.Error.*;
 import asteroids.model.Util.*;
 import asteroids.IShip;
+import java.lang.Exception;
 import be.kuleuven.cs.som.annotate.*;
 
 public class Ship implements IShip{
@@ -59,7 +60,7 @@ public class Ship implements IShip{
 	 * TODO exceptions checken.
 	 */
 	
-	public void Move(double elapsedTime) throws NegativeTimeException{
+	public void Move(double elapsedTime) throws NegativeTimeException, OverflowException{
 		
 		try{if(!isValidElapsedTime(elapsedTime)){
 			
@@ -71,6 +72,8 @@ public class Ship implements IShip{
 			
 		} catch (NegativeTimeException neg){
 			
+		} catch (OverflowException exc){
+			//TODO Hij moet dan de rand krijgen als positie. moeilijkheid: welke rand?
 		}
 	}
 	private boolean isValidElapsedTime(double time){

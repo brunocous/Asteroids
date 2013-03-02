@@ -47,7 +47,7 @@ public double getPosY() {
 public void setPosY(double posY) {
 	this.posY = posY;
 }
-
+//TODO exception opgooien voor overflow
 public void add(Position posToAdd){
 	setPosX(posToAdd.getPosX() + getPosX());
 	setPosY(posToAdd.getPosY() + getPosY());
