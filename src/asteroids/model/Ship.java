@@ -219,7 +219,7 @@ public class Ship implements IShip {
 	 * @return true if and only if the given radius is higher than 0 and less than or equal to 10.
 	 *         |result == (!Util.fuzzyLessThanOrEqualTo(radius, 0)) && Util.fuzzyLessThanOrEqualTo(radius, 10))
 	 */
-	public boolean isValidRadius(double radius){
+	private boolean isValidRadius(double radius){
 		
 		return (!Util.fuzzyLessThanOrEqualTo(radius, 10));
 	
