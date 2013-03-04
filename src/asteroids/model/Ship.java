@@ -190,7 +190,7 @@ public class Ship implements IShip {
 	 *         |!isValidRadius(radius)
 	 * 
 	 */
-	//TODO straal mag enkel positief zijn? 
+	//TODO straal mag enkel positief zijn? ---> ja
 	@Basic
 	public void setRadius(double radius) {
 		

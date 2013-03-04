@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
+import asteroids.model.Facade;
 
 @SuppressWarnings("serial")
 public class Asteroids extends JFrame {
@@ -119,9 +120,9 @@ public class Asteroids extends JFrame {
       System.out.println("no screen detected");
       return;
     } else {
-      // <begin>
-      IFacade facade = new asteroids.model.Facade();
-      // <end>
+      
+      IFacade facade = new Facade();
+      
       GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
       GraphicsDevice device = env.getDefaultScreenDevice();
       Asteroids asteroids;
