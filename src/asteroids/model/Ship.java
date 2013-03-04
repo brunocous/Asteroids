@@ -1,66 +1,159 @@
 package asteroids.model;
 
+import asteroids.Asteroids;
 import asteroids.Util;
 import asteroids.Error.*;
 import asteroids.model.Util.*;
-import asteroids.IShip;
-import java.lang.Exception;
 import be.kuleuven.cs.som.annotate.*;
 
-public class Ship implements IShip{
+public class Ship {
 
+	// the position vector of a ship.
 	private Position pos;
+	// the velocity vector of a ship.
 	private Velocity vel;
+	// the direction a ship is orientated in.
 	private double direction;
+	// the radius of a ship.
 	private double radius;
 
+	/**
+	 * Initialize this new ship with given pos, vel, direction and radius.
+	 * @param pos
+	 *        the position for this new ship.
+	 * @param vel
+	 *        the velocity for this new ship.
+	 * @param direction
+	 *        the direction for this new ship.
+	 * @param radius
+	 *        the radius for this new ship
+	 * @post the new pos for this new ship is equal to the given pos
+	 *       | new.getPos()== pos 
+	 * @post the new vel for this new ship is equal to the given vel
+	 *       | new.getVel()== vel
+	 * @post the new direction for this new ship is equal to the given direction
+	 *       | new.getDirection()== direction
+	 * @post the new radius for this new ship is equal to the given radius
+	 *       | new.getRadius()== radius 
+	 */
 	public Ship(Position pos,Velocity vel, double direction, double radius){
-		this.pos=pos;
-		this.vel=vel;
-		this.direction=direction;
-		this.radius=radius;
+	//TODO	
+		this.setPos(pos);
+		this.setVel(vel);
+		this.setDirection(direction);
+		this.setRadius(radius);
 	}
 	
+	/**
+	 * Return the position for this bank account.
+	 */
+	@Basic
 	public Position getPos() {
 		return pos;
 	}
 
+	/**
+	 * Set the pos for this ship to the given pos. 
+	 * @param pos
+	 *        the new pos for this ship.
+	 * @post The new pos for this ship is equal to the given pos.
+	 *       | new.getPos()== pos
+	 * @throws verkeerdePositie????
+	 */
+	
+	@Basic
 	public void setPos(Position pos) {
 		this.pos = pos;
 	}
-
+	
+	
+	/**
+	 * Return the velocity of this ship.
+	 */
+	@Basic
 	public Velocity getVel() {
 		return vel;
 	}
 
+	/**
+	 * Set the vel of this ship to the given vel.
+	 * @param vel
+	 *        the new velocity for this ship.
+	 * @post if the given vel is a valid velocity, in other words if its norm is less than or 
+	 *       equal to the speed of light, the new vel for this ship is equal to the given
+	 *       vel. Else the new vel of this ship is equal to the old vel of this ship.
+	 *       |if (isValidVelocity(vel))
+	 *       |then new.getVel()==vel
+	 *       |else new.getVel()==this.getVel()
+	 */
+	@Basic
 	public void setVel(Velocity vel) {
+		// TODO
+		if (isValidVelocity(vel)){
 		this.vel = vel;
+		}
 	}
 
+	/** 
+	 * Return the direction of this ship.
+	 */
+	@Basic
 	public double getDirection() {
 		return direction;
 	}
-//TODO simpelste vorm
+
+	/**
+	 * Set the direction of this ship to the given direction.
+	 * @param direction
+	 *        the new direction for this ship in radians.
+	 * @post if the given direction is less than 2*Pi radians, the new direction for this 
+	 *       ship is equal to the given direction. Else the new direction for this ship is
+	 *       equal to the equivalent angle of the given direction (angle) that is less than 
+	 *       or equal to 2*Pi.
+	 *       |	new.direction == direction%(2*Math.PI);
+	 */
+	@Basic
 	public void setDirection(double direction) {
 		this.direction = direction%(2*Math.PI);
 	}
 
+	/**
+	 * Return the radius of this ship.
+	 */
+	@Basic
 	public double getRadius() {
 		return radius;
 	}
 
+	/**
+	 * Set the radius of this ship to the given radius.
+	 * @param radius
+	 *        the new radius for this ship.
+	 * @post 
+	 * @throws illegalRadius????
+	 * 
+	 */
+	//TODO straal mag enkel positief zijn? 
+	@Basic
 	public void setRadius(double radius) {
 		this.radius = radius;
 	}
+	
 	/**
 	 * Moves the ship during a fixed amount of time.
 	 * @param elapsedTime
+	 * 		  amount of time during which the ship is moving
+	 * @post The position of the ship has been changed according to the previous position,
+	 * 		   the current velocity of the ship and the given duration elapsedTime. 
+	 * 		   |(new this).getPos() == this.getPos().add(new Position(vel.getVelX()*elapsedTime, vel.getVelY()*elapsedTime));
+	 * @throws NegativeTimeException
+	 *         The given elapsedTime is negative and therefore unvalid.
+	 *         |!isValidElapsedTime()
 	 * 
-	 * @post 
 	 * TODO exceptions checken.
 	 */
 	
-	public void move(double elapsedTime) throws NegativeTimeException, OverflowException{
+	public void Move(double elapsedTime) throws NegativeTimeException{
 		
 		try{if(!isValidElapsedTime(elapsedTime)){
 			
@@ -72,26 +165,68 @@ public class Ship implements IShip{
 			
 		} catch (NegativeTimeException neg){
 			
-		} catch (OverflowException exc){
-			//TODO Hij moet dan de rand krijgen als positie. moeilijkheid: welke rand?
 		}
 	}
+	
+	/** 
+	 * Check whether the given time is a valid amount of time. 
+	 * @param time
+	 *        the amount of time to be checked
+	 * @return true if and only if the given time is greater than or equal to zero.
+	 *         | result == !(time<0)
+	 *        
+	 */
 	private boolean isValidElapsedTime(double time){
 		return !(time < 0);
 	}
 	
+	/**
+	 * Check whether the given velocity is a valid velocity. In other words, check whether its 
+	 * norm is less than or equal to the speed of light.
+	 * @param velocity
+	 * @return true if and only if the given velocity's norm is less than or equal to the speed
+	 *         of light.
+	 *         |result == (velocity.getNorm()<=Velocity.getSpeedOfLight())
+	 */
 	private boolean isValidVelocity(Velocity velocity){
 		return (velocity.getNorm()<=Velocity.getSpeedOfLight());
 	}
 	
+	/**
+	 * Turns the ship over a fixed angle. 
+	 * @param angle
+	 * 		  The angle (in radians) to be added to the current direction of the ship
+	 * @post the new direction of the ship is the previous direction plus
+	 *       the given angle. If adding the angle to the previous direction leads to a 
+	 *       result higher than 2*Pi, the new direction will be that result in its simplest form.
+	 *       |(new this).getDirection()== (this.getDirection()+ angle)%(2*Math.PI)
+	 */
+	//TODO @pre? 
+	
 	public void turn(double angle){
 		setDirection(getDirection() + angle);
 	}
-	// TODO implementeren: een add methode in velocity. + testen
-	
-	public void thrust(double direction, double amount) throws ExceedsSpeedOfLightException{
+
+	/**
+	 * Changes the ship's velocity by a given amount, does not change the ship's direction. 
+	 * @param amount
+	 * 		  The amount by which the velocity of the ship will be increased
+	 * @throws ExceedsSpeedOfLightException
+	 *         Increasing the speed of the ship by the given amount leads to a new velocity
+	 *         of the ship that exceeds the speed of light.
+	 * @post If increasing the ship's velocity by the given amount does not result into a 
+	 *       velocity that is higher than the speed of light, the ship's new velocity will be 
+	 *       increased by the given amount. If it does exceed the speed of light, the ship's new
+	 *       velocity will be the speed of light.   
+	 *       |if(isValidVelocity((new Velocity(getVel().getVelX(), getVel().getVelY())).add(new Velocity(amount*Math.cos(getDirection()),amount*Math.sin(getDirection()))))
+	 *       |     then (new this).getVel()== this.getVel().add(new Velocity(amount*Math.cos(getDirection()),amount*Math.sin(getDirection())))
+	 *       |else ((new this).getVel().getNorm()==Velocity.getSpeedOfLight())
+	 * @post The ship's direction will not be changed. 
+	 *       |(new this).getDirection() == this.getDirection()
+	 */
+	public void thrust(double amount) throws ExceedsSpeedOfLightException{
 		
-		Velocity gainedSpeed = new Velocity(amount*Math.cos(direction),amount*Math.sin(direction));
+		Velocity gainedSpeed = new Velocity(amount*Math.cos(getDirection()),amount*Math.sin(getDirection()));
 		Velocity newSpeed = new Velocity(getVel().getVelX(), getVel().getVelY());
 		newSpeed.add(gainedSpeed);
 		
@@ -110,11 +245,25 @@ public class Ship implements IShip{
 		}
 		
 	}
-	//TODO implementeren: testen of schip1 en 2 gelijk zijn
+	
+	/**
+	 * Returns the distance between two given ships.  
+	 * @param ship1
+	 * 	      The first ship of which the position will be compared to the given Ship ship2
+	 * @param ship2
+	 *        The second ship of which the position will be compared to the given Ship ship1
+	 * @return The distance between the outer side of ship1 and ship2 if ship1 and ship2 are different ships, 
+	 *         0.0 if ship1 and ship2 are the same ship. 
+	 *         The result will be negative if ship1 and ship2 overlap.
+	 *         |if(ship1==ship2)
+	 *         |  then result == 0.0
+	 *         |else result == ship1.getPos().getDistanceTo(ship2.getPos())-(ship1.getRadius()+ship2.getRadius())
+	 */
 	public double getDistanceBetween(Ship ship1, Ship ship2){
 		
+		double result;
 		if(ship1==ship2){
-			return 0.0;
+			result= 0.0;
 		}
 		
 		else{
@@ -122,35 +271,79 @@ public class Ship implements IShip{
 		double distanceBetweenCentres = ship1.getPos().getDistanceTo(ship2.getPos());
 		double sumOfRadii= ship1.getRadius()+ship2.getRadius();
 		double distance = distanceBetweenCentres - sumOfRadii;
-		return distance;
+		result = distance;
 		
 		}
+		return result;
 		
 	}
-	//TODO documenteren
+	/**
+	 * Check if 2 ships overlap.
+	 * @param ship1
+	 * 	      The first ship of which the position will be compared to the position of ship2
+	 * @param ship2
+	 * 	      The second ship of which the position will be compared to the position of ship1
+	 * @return true if and only if ship1 and ship2 are the same ship or the distance between
+	 *         ship1 and ship2 is less than zero. 
+	 *         | if( ship1==ship2 || (asteroids.Util.fuzzyLessThanOrEqualTo(getDistanceBetween(ship1,ship2),0) && !asteroids.Util.fuzzyEquals(getDistanceBetween(ship1,ship2), 0)))
+	 *         | then result == true
+	 *         | else result == false
+	 */
 	public boolean overlap(Ship ship1, Ship ship2){
 		
+		boolean result;
 		if(ship1==ship2){
 			
-			return true;
+			result= true;
 			
-		} else if(asteroids.Util.fuzzyLessThanOrEqualTo(getDistanceBetween(ship1,ship2),0)){
+		} else if(asteroids.Util.fuzzyLessThanOrEqualTo(getDistanceBetween(ship1,ship2),0) && !asteroids.Util.fuzzyEquals(getDistanceBetween(ship1,ship2), 0)){
 			
-			return true;
+			result= true;
 			
 		} else {
 			
-			return false;
+			result= false;
 		}
 		
+		return result;
+		
 	}
+	
+	/**
+	 * Calculates the scalar product of two 2-dimensional vectors.
+	 * @param x1
+	 *        x-coördinate of the first vector.
+	 * @param y1
+	 *        y-coördinate of the first vector
+	 * @param x2
+	 *        x-coördinate of the second vector.
+	 * @param y2
+	 *        y-coördinate of the second vector.
+	 * @return the scalar product of vector1(x1,y1) and vector2(x2,y2)
+	 *         |result==x1*y1+x2*y2
+	 */
 	
 	public double scalarProduct(double x1, double y1, double x2, double y2){
 		
 		return x1*y1+x2*y2;
 	}
 	
-
+	
+	/**
+	 * Finds out whether and in how many seconds 2 ships will collide. 
+	 * @param ship1
+	 * 		  The first ship that will or will not collide with ship2 after an amount of time.
+	 * @param ship2
+	 * 		  The second ship that will or will not collide with ship1 after an amount of time.
+	 * @return The amount of time (in seconds) it will take for ship1 and ship2 to collide or 
+	 * 	       POSITIVE_INFINITY if they will never collide (given their current position and 
+	 *         velocity). 
+	
+	 * 
+	 */
+	//TODO @return, @throws illegalArgument als ship1 en ship2 naar hetzelfde schip verwijzen?
+	                      
+	
 	public double getTimeToCollision(Ship ship1, Ship ship2){
 		
 		double deltavx = ship2.getVel().getVelX()- ship1.getVel().getVelX();
@@ -159,22 +352,42 @@ public class Ship implements IShip{
 		double deltary = ship2.getPos().getPosY()- ship1.getPos().getPosY();
 		double sigma = ship1.getRadius()+ship2.getRadius();
 		double d = Math.pow(scalarProduct(deltavx, deltavy, deltarx, deltary), 2)-scalarProduct(deltavx,deltavy,deltavx,deltavy)*(scalarProduct(deltarx,deltary,deltarx,deltary)-Math.pow(sigma, 2));
+		double result;
 		
 		if(Util.fuzzyLessThanOrEqualTo(-scalarProduct(deltavx,deltavy,deltarx,deltary),0) || Util.fuzzyLessThanOrEqualTo(d,0) ){
-			return Double.POSITIVE_INFINITY;
+			result = Double.POSITIVE_INFINITY;
 		}
 		else{
-			return -(scalarProduct(deltavx, deltavy, deltarx,deltary)+Math.sqrt(d))/scalarProduct(deltavx,deltavy,deltavx,deltavy);
+			result = -(scalarProduct(deltavx, deltavy, deltarx,deltary)+Math.sqrt(d))/scalarProduct(deltavx,deltavy,deltavx,deltavy);
+			
 		}
+		return result;
 	}
+	
+	/**
+	 * Calculates the position where 2 ships will collide, if they will collide within a 
+	 * finite amount of time.
+	 * @param ship1
+	 *        The first ship of which we want to know at which position it will collide with
+	 *        ship2.
+	 * @param ship2
+	 *        The second ship of which we want to know at which position it will collide with
+	 *        ship1.
+	 * @return The position where ship1 and ship2 will collide if they will collide eventually 
+	 *         or 'null' if ship1 and ship2 will never collide. 
+	 *         | if(deltaT==Double.POSITIVE_INFINITY)
+	 *	       | then result== null
+	 *	       | else result== new Position(ship1.getPos().getPosX()+getTimeToCollision(ship1,ship2)*ship1.getVel().getVelX(),ship1.getPos().getPosY()+getTimeToCollision(ship1,ship2)*ship1.getVel().getVelY())
+	 */
 	
 	public Position getCollisionPosition(Ship ship1, Ship ship2){
 		
 		double deltaT= getTimeToCollision(ship1,ship2);
+		Position result= null;
 		
 		if(deltaT==Double.POSITIVE_INFINITY){
 			
-			return null;
+			result= null;
 			
 		}
 		else{
@@ -183,11 +396,11 @@ public class Ship implements IShip{
 			double yCoordCollision = ship1.getPos().getPosY()+deltaT*ship1.getVel().getVelY();
 			
 			Position collisionPoint = new Position(xCoordCollision, yCoordCollision);
-			return collisionPoint;
+			result= collisionPoint;
 			
 		}
+		return result;
 		}
 		
 		
 	}
-
