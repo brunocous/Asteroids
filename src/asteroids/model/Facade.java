@@ -4,14 +4,15 @@ import asteroids.IFacade;
 import asteroids.IShip;
 
 public class Facade implements IFacade{
+	private Ship theShip;
 	
 	public Facade(){
-		
+		theShip = new Ship();
 	}
 
 	@Override
 	public IShip createShip() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
