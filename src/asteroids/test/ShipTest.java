@@ -82,11 +82,11 @@ public class ShipTest {
 		assertTrue(Util.fuzzyEquals(Math.PI, theShip.getDirection()));
 		assertTrue(Util.fuzzyEquals(2.0, theShip.getRadius()));
 	}
-	//TODO bespreken hoe dit moet afgehandeld worden. Via exceedspeedoflightexception, of toelaten of moet gwn lichtsnelheid worden.
+	 
 	@Test
 	public void extendendConstructor_infiniteSpeedCase() throws Exception{
 		Ship theShip = new Ship(positivePosition, positiveInfiniteVelocity, Math.PI, 2.0);
-		assertTrue(Util.fuzzyEquals(theShip.getVel().getVelX(), positiveInfiniteVelocity.getVelX()));
+		assertTrue(Util.fuzzyEquals(theShip.getVel().getVelX(), speedOfLightVelocity.getVelX()));
 	}
 	
 	@Test
@@ -94,7 +94,7 @@ public class ShipTest {
 		Ship theShip = new Ship(infinitePosition, positiveVelocity, Math.PI, 2.0);
 		assertTrue(Util.fuzzyEquals(theShip.getPos().getPosX(), infinitePosition.getPosX()));
 	}
-	//TODO radius moet groter of gelijk zijn aan nul. Exception moet nog aangemaakt worden in ship.
+	//TODO radius moet 10 worden
 	@Test
 	public void extendenConstructor_negativeRadiusCase() throws Exception{
 		Ship theShip = new Ship(positivePosition, positiveVelocity, Math.PI, -2.0);
@@ -144,7 +144,6 @@ public class ShipTest {
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), 0.0));
 	}
 	@Test
-	//TODO check schrijfwijze "than"
 	public void turn_lessThan2PiCase(){
 		positivePositionShip.turn(Math.PI);
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getDirection(), Math.PI));
@@ -181,6 +180,7 @@ public class ShipTest {
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelY(), positiveVelocity.getVelY() + 10.0*Math.sin(positivePositionShip.getDirection())));	
 	}
 	@Test
+	//TODO alle trusts hebbe ma 1 argument
 	public void thrust_sameDirectionNegativeAmount() throws Exception{
 		positivePositionShip.thrust(positivePositionShip.getDirection(), -10.0);
 		assertTrue(Util.fuzzyEquals(positivePositionShip.getVel().getVelX(), positiveVelocity.getVelX() + (-10.0)*Math.cos(positivePositionShip.getDirection())));
