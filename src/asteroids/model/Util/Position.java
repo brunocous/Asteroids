@@ -1,6 +1,5 @@
 package asteroids.model.Util;
 
-import asteroids.model.OutsideOfBorderException;
 import be.kuleuven.cs.som.annotate.*;
 
 public class Position {
@@ -12,6 +11,7 @@ private double posY;
 
 /**
  * Initialize this new position with given posX and given posY.
+ * 
  * @param posX
  *        the initial x-coördinate for this new position.
  * @param posY
@@ -21,7 +21,7 @@ private double posY;
  * @post the new posY for this new position is equal to the given posY
  *       |new.getPosY()==posY   
  */
-//TODO @throws
+
 public Position(double posX, double posY) {
 	this.setPosX(posX);
 	this.setPosY(posY);
@@ -40,11 +40,8 @@ public double getPosX() {
  * 		  The new value for the posX of this position.
  * @post the new posX of this position is equal to the given posX.
  *       |new.getPosX()==posX
- * @throws OutsideOfBorderException
- *         The given posX has an absolute value bigger than Double.POSITIVE_INFINITY.
- *         | Double.POSITIVE_INFINITY - Math.abs(posX) < 0        
  */
-//TODO @throws
+
 @Basic
 public void setPosX(double posX) {
 	
@@ -70,7 +67,7 @@ public double getPosY() {
  * @post the new posY of this position is equal to the given posY.
  *       |new.getPosY()==posY
  */
-//TODO @throws
+
 @Basic
 public void setPosY(double posY) {
 	
@@ -79,6 +76,7 @@ public void setPosY(double posY) {
 
 /**
  * Add a position vector to this position vector.
+ * 
  * @param posToAdd
  *        the position vector to be added to this position
  * @post the new posX of this position is equal to the old posX of this position plus the
@@ -96,6 +94,7 @@ public void add(Position posToAdd){
 
 /**
  * Calculate the distance between this position and another given position.
+ * 
  * @param position
  *        the position to which the distance is calculated.
  * @return the distance between this position and the given position if the given position is

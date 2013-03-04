@@ -20,6 +20,7 @@ public class Ship implements IShip {
 
 	/**
 	 * Initialize this new ship with given pos, vel, direction and radius.
+	 * 
 	 * @param pos
 	 *        the position for this new ship.
 	 * @param vel
@@ -37,6 +38,7 @@ public class Ship implements IShip {
 	 * @post the new radius for this new ship is equal to the given radius
 	 *       | new.getRadius()== radius 
 	 */
+	
 	public Ship(Position pos,Velocity vel, double direction, double radius){
 
 		this.setPos(pos);
@@ -46,14 +48,18 @@ public class Ship implements IShip {
 	}
 	
 	/**
-	 * @post the new pos for this new ship is equal to the given pos
-	 *       | new.getPos()== pos 
-	 * @post the new vel for this new ship is equal to the given vel
-	 *       | new.getVel()== vel
-	 * @post the new direction for this new ship is equal to the given direction
-	 *       | new.getDirection()== direction
-	 * @post the new radius for this new ship is equal to the given radius
-	 *       | new.getRadius()== radius  
+	 * Initialize this new ship as a default ship. 
+	 * 
+	 * @post the new pos for this new ship is a position object with x-component 0 and 
+	 *       y-component 0.
+	 *       | new.getPos()== new Position(0,0)
+	 * @post the new vel for this new ship is a velocity object with x-component 0 and
+	 *       y-component 0.
+	 *       | new.getVel()== new Velocity(0,0)
+	 * @post the new direction for this new ship is 0.
+	 *       | new.getDirection()== 0
+	 * @post the new radius for this new ship is 15.
+	 *       | new.getRadius()== 15  
 	 */
 	public Ship(){
 		
@@ -62,7 +68,7 @@ public class Ship implements IShip {
 		Velocity vel = new Velocity(0,0);
 		this.setVel(vel);
 		this.direction =0;
-		this.radius=1;
+		this.radius=15;
 		
 	}
 	
@@ -77,6 +83,7 @@ public class Ship implements IShip {
 
 	/**
 	 * Set the pos for this ship to the given pos. 
+	 * 
 	 * @param pos
 	 *        the new pos for this ship.
 	 * @post The new pos for this ship is equal to the given pos.
@@ -103,6 +110,7 @@ public class Ship implements IShip {
 
 	/**
 	 * Set the vel of this ship to the given vel.
+	 * 
 	 * @param vel
 	 *        the new velocity for this ship.
 	 * @post if the given vel is a valid velocity, in other words if its norm is less than or 
@@ -141,6 +149,7 @@ public class Ship implements IShip {
 
 	/**
 	 * Set the direction of this ship to the given direction.
+	 * 
 	 * @param direction
 	 *        the new direction for this ship in radians.
 	 * @post if the given direction is less than 2*Pi radians, the new direction for this 
@@ -168,6 +177,7 @@ public class Ship implements IShip {
 
 	/**
 	 * Set the radius of this ship to the given radius.
+	 * 
 	 * @param radius
 	 *        the new radius for this ship in km.
 	 * @post The new radius for this ship is equal to the given radius if the given radius is
@@ -216,6 +226,7 @@ public class Ship implements IShip {
 	}
 	/**
 	 * Moves the ship during a fixed amount of time.
+	 * 
 	 * @param elapsedTime
 	 * 		  amount of time during which the ship is moving in seconds.
 	 * @post The position of the ship has been changed according to the previous position,
@@ -245,6 +256,7 @@ public class Ship implements IShip {
 	
 	/** 
 	 * Check whether the given time is a valid amount of time. 
+	 * 
 	 * @param time
 	 *        the amount of time to be checked in seconds.
 	 * @return true if and only if the given time is greater than or equal to zero.
@@ -258,6 +270,7 @@ public class Ship implements IShip {
 	/**
 	 * Check whether the given velocity is a valid velocity. In other words, check whether its 
 	 * norm is less than or equal to the speed of light.
+	 * 
 	 * @param velocity
 	 *        The velocity to be checked.
 	 * @return true if and only if the given velocity's norm is less than or equal to the speed
@@ -270,6 +283,7 @@ public class Ship implements IShip {
 	
 	/**
 	 * Turns the ship over a fixed angle. 
+	 * 
 	 * @param angle
 	 * 		  The angle (in radians) to be added to the current direction of the ship
 	 * @post the new direction of the ship is the previous direction plus
@@ -285,6 +299,7 @@ public class Ship implements IShip {
 
 	/**
 	 * Changes the ship's velocity by a given amount, does not change the ship's direction. 
+	 * 
 	 * @param amount
 	 * 		  The amount by which the velocity of the ship will be increased
 	 * @throws ExceedsSpeedOfLightException
@@ -325,6 +340,7 @@ public class Ship implements IShip {
 	 * Correct a given velocity vector speed (which has a norm that is bigger than the speed
 	 * of light) to a velocity vector with the same direction and a norm equal to the speed 
 	 * of light.
+	 * 
 	 * @param speed
 	 *        The velocity vector that is to be corrected.
 	 * @return the corrected velocity vector, which has the same direction as the given speed
@@ -342,6 +358,7 @@ public class Ship implements IShip {
 	
 	/**
 	 * Returns the distance between two given ships.  
+	 * 
 	 * @param ship1
 	 * 	      The first ship of which the position will be compared to the given Ship ship2
 	 * @param ship2
@@ -353,7 +370,7 @@ public class Ship implements IShip {
 	 *         |  then result == 0.0
 	 *         |else result == ship1.getPos().getDistanceTo(ship2.getPos())-(ship1.getRadius()+ship2.getRadius())
 	 */
-	public double getDistanceBetween(Ship ship1, Ship ship2){
+	public static double getDistanceBetween(Ship ship1, Ship ship2){
 		
 		double result;
 		if(ship1==ship2){
@@ -373,6 +390,7 @@ public class Ship implements IShip {
 	}
 	/**
 	 * Check if 2 ships overlap.
+	 * 
 	 * @param ship1
 	 * 	      The first ship of which the position will be compared to the position of ship2
 	 * @param ship2
@@ -383,7 +401,7 @@ public class Ship implements IShip {
 	 *         | then result == true
 	 *         | else result == false
 	 */
-	public boolean overlap(Ship ship1, Ship ship2){
+	public static boolean overlap(Ship ship1, Ship ship2){
 		
 		boolean result;
 		if(ship1==ship2){
@@ -405,6 +423,7 @@ public class Ship implements IShip {
 	
 	/**
 	 * Calculates the scalar product of two 2-dimensional vectors.
+	 * 
 	 * @param x1
 	 *        x-coördinate of the first vector.
 	 * @param y1
@@ -417,7 +436,7 @@ public class Ship implements IShip {
 	 *         |result==x1*y1+x2*y2
 	 */
 	
-	public double scalarProduct(double x1, double y1, double x2, double y2){
+	private static double scalarProduct(double x1, double y1, double x2, double y2){
 		
 		return x1*y1+x2*y2;
 	}
@@ -425,6 +444,7 @@ public class Ship implements IShip {
 	
 	/**
 	 * Finds out whether and in how many seconds 2 ships will collide. 
+	 * 
 	 * @param ship1
 	 * 		  The first ship that will or will not collide with ship2 after an amount of time.
 	 * @param ship2
@@ -438,7 +458,7 @@ public class Ship implements IShip {
 	//TODO @return, @throws illegalArgument als ship1 en ship2 naar hetzelfde schip verwijzen?
 	                      
 	
-	public double getTimeToCollision(Ship ship1, Ship ship2){
+	public static double getTimeToCollision(Ship ship1, Ship ship2){
 		
 		double deltavx = ship2.getVel().getVelX()- ship1.getVel().getVelX();
 		double deltavy = ship2.getVel().getVelY()- ship1.getVel().getVelY();
@@ -461,6 +481,7 @@ public class Ship implements IShip {
 	/**
 	 * Calculates the position where 2 ships will collide, if they will collide within a 
 	 * finite amount of time.
+	 * 
 	 * @param ship1
 	 *        The first ship of which we want to know at which position it will collide with
 	 *        ship2.
@@ -474,7 +495,7 @@ public class Ship implements IShip {
 	 *	       | else result== new Position(ship1.getPos().getPosX()+getTimeToCollision(ship1,ship2)*ship1.getVel().getVelX(),ship1.getPos().getPosY()+getTimeToCollision(ship1,ship2)*ship1.getVel().getVelY())
 	 */
 	
-	public Position getCollisionPosition(Ship ship1, Ship ship2){
+	public static Position getCollisionPosition(Ship ship1, Ship ship2){
 		
 		double deltaT= getTimeToCollision(ship1,ship2);
 		Position result= null;
