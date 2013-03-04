@@ -1,12 +1,13 @@
 package asteroids.model;
 
 import asteroids.Asteroids;
+import asteroids.IShip;
 import asteroids.Util;
 import asteroids.Error.*;
 import asteroids.model.Util.*;
 import be.kuleuven.cs.som.annotate.*;
 
-public class Ship {
+public class Ship implements IShip {
 
 	// the position vector of a ship.
 	private Position pos;
@@ -37,12 +38,24 @@ public class Ship {
 	 *       | new.getRadius()== radius 
 	 */
 	public Ship(Position pos,Velocity vel, double direction, double radius){
-	//TODO	
+
 		this.setPos(pos);
 		this.setVel(vel);
 		this.setDirection(direction);
 		this.setRadius(radius);
 	}
+	
+	public Ship(){
+		
+		Position pos = new Position(0,0);
+		this.setPos(pos);
+		Velocity vel = new Velocity(0,0);
+		this.setVel(vel);
+		this.direction =0;
+		this.radius=1;
+		
+	}
+	
 	
 	/**
 	 * Return the position for this bank account.
@@ -57,13 +70,14 @@ public class Ship {
 	 * @param pos
 	 *        the new pos for this ship.
 	 * @post The new pos for this ship is equal to the given pos.
-	 *       | new.getPos()== pos
-	 * @throws verkeerdePositie????
+	 *       |new.getPos()= pos
 	 */
 	
 	@Basic
 	public void setPos(Position pos) {
-		this.pos = pos;
+	
+	    this.pos = pos;
+	
 	}
 	
 	
@@ -72,7 +86,9 @@ public class Ship {
 	 */
 	@Basic
 	public Velocity getVel() {
+		
 		return vel;
+		
 	}
 
 	/**
@@ -81,16 +97,25 @@ public class Ship {
 	 *        the new velocity for this ship.
 	 * @post if the given vel is a valid velocity, in other words if its norm is less than or 
 	 *       equal to the speed of light, the new vel for this ship is equal to the given
-	 *       vel. Else the new vel of this ship is equal to the old vel of this ship.
+	 *       vel. Else the new vel of this ship has the direction of the given vel but a norm
+	 *       equal to the speed of light.
 	 *       |if (isValidVelocity(vel))
 	 *       |then new.getVel()==vel
-	 *       |else new.getVel()==this.getVel()
+	 *       |else new.getVel() == correctSpeed(vel)
 	 */
 	@Basic
 	public void setVel(Velocity vel) {
 		// TODO
 		if (isValidVelocity(vel)){
-		this.vel = vel;
+			
+			this.vel = vel;
+			
+		}
+		else{
+			
+			Velocity result = correctSpeed(vel);
+			this.vel = result;
+			
 		}
 	}
 
@@ -99,7 +124,9 @@ public class Ship {
 	 */
 	@Basic
 	public double getDirection() {
+		
 		return direction;
+		
 	}
 
 	/**
@@ -114,7 +141,9 @@ public class Ship {
 	 */
 	@Basic
 	public void setDirection(double direction) {
+		
 		this.direction = direction%(2*Math.PI);
+		
 	}
 
 	/**
@@ -122,21 +151,44 @@ public class Ship {
 	 */
 	@Basic
 	public double getRadius() {
+		
 		return radius;
+		
 	}
 
 	/**
 	 * Set the radius of this ship to the given radius.
 	 * @param radius
 	 *        the new radius for this ship.
-	 * @post 
-	 * @throws illegalRadius????
+	 * @post The new radius for this ship is equal to the given radius if the given radius is
+	 *       bigger than 0 and less than or equal to 10. If the given radius is an illegal 
+	 *       radius, the new radius for this ship is 1. 
+	 *       |if(isValidRadius(radius))
+	 *       |then new.getRadius()== radius
+	 *       |else new.getRadius()== 1    
+	 * @throws illegalRadiusException
+	 *         the given radius is not a legal radius for this ship.
+	 *         |!isValidRadius(radius)
 	 * 
 	 */
 	//TODO straal mag enkel positief zijn? 
 	@Basic
 	public void setRadius(double radius) {
+		
+		try{ if(!isValidRadius(radius)){
+			
+			throw new illegalRadiusException();
+			
+		}
+		
 		this.radius = radius;
+		}
+		
+		catch(illegalRadiusException exc){
+			
+			this.setRadius(1);
+			
+		}
 	}
 	
 	/**
@@ -239,12 +291,30 @@ public class Ship {
 		}
 		catch(ExceedsSpeedOfLightException tohigh){
 			
-			double correctingFactor = newSpeed.getNorm()/Velocity.getSpeedOfLight();
-			Velocity correctedSpeed = new Velocity (newSpeed.getVelX()/correctingFactor,newSpeed.getVelY()/correctingFactor);
-			setVel(correctedSpeed);
+			Velocity result = correctSpeed(newSpeed);
+			setVel(result);
 		}
 		
 	}
+	
+	/**
+	 * Correct a given velocity vector speed, which has a norm that is bigger than the speed
+	 * of light, to a velocity vector with the same direction and a norm equal to the speed 
+	 * of light.
+	 * @param speed
+	 *        The velocity vector that is to be corrected.
+	 * @return the corrected velocity vector, which has the same direction as the given speed
+	 *         and has a norm equal to the speed of light.
+	 *         | result == new Velocity (speed.getVelX()/(speed.getNorm()/Velocity.getSpeedOfLight()),speed.getVelY()/(speed.getNorm()/Velocity.getSpeedOfLight()))
+	 *         
+	 */
+	public Velocity correctSpeed(Velocity speed){
+		
+		double correctingFactor = speed.getNorm()/Velocity.getSpeedOfLight();
+		Velocity correctedSpeed = new Velocity (speed.getVelX()/correctingFactor,speed.getVelY()/correctingFactor);
+		return correctedSpeed;
+	}
+	
 	
 	/**
 	 * Returns the distance between two given ships.  

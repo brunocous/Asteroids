@@ -1,5 +1,6 @@
 package asteroids.model.Util;
 
+import asteroids.model.OutsideOfBorderException;
 import be.kuleuven.cs.som.annotate.*;
 
 public class Position {
@@ -39,19 +40,28 @@ public double getPosX() {
  * 		  The new value for the posX of this position.
  * @post the new posX of this position is equal to the given posX.
  *       |new.getPosX()==posX
+ * @throws OutsideOfBorderException
+ *         The given posX has an absolute value bigger than Double.POSITIVE_INFINITY.
+ *         | Double.POSITIVE_INFINITY - Math.abs(posX) < 0        
  */
 //TODO @throws
 @Basic
 public void setPosX(double posX) {
+	
 	this.posX = posX;
+	
 }
+
 /**
  * Return the posY of this position.
  */
 @Basic
 public double getPosY() {
+	
 	return posY;
+	
 }
+
 /**
  *Set the value for y the posY of this position to the given posY. 
  *
@@ -63,6 +73,7 @@ public double getPosY() {
 //TODO @throws
 @Basic
 public void setPosY(double posY) {
+	
 	this.posY = posY;
 }
 
