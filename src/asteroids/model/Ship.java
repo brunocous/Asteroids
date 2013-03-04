@@ -45,6 +45,16 @@ public class Ship implements IShip {
 		this.setRadius(radius);
 	}
 	
+	/**
+	 * @post the new pos for this new ship is equal to the given pos
+	 *       | new.getPos()== pos 
+	 * @post the new vel for this new ship is equal to the given vel
+	 *       | new.getVel()== vel
+	 * @post the new direction for this new ship is equal to the given direction
+	 *       | new.getDirection()== direction
+	 * @post the new radius for this new ship is equal to the given radius
+	 *       | new.getRadius()== radius  
+	 */
 	public Ship(){
 		
 		Position pos = new Position(0,0);
@@ -159,13 +169,12 @@ public class Ship implements IShip {
 	/**
 	 * Set the radius of this ship to the given radius.
 	 * @param radius
-	 *        the new radius for this ship.
+	 *        the new radius for this ship in km.
 	 * @post The new radius for this ship is equal to the given radius if the given radius is
-	 *       bigger than 0 and less than or equal to 10. If the given radius is an illegal 
-	 *       radius, the new radius for this ship is 1. 
+	 *       larger than 10. Else the new radius for this ship is 15.
 	 *       |if(isValidRadius(radius))
 	 *       |then new.getRadius()== radius
-	 *       |else new.getRadius()== 1    
+	 *       |else new.getRadius()== 10    
 	 * @throws illegalRadiusException
 	 *         the given radius is not a legal radius for this ship.
 	 *         |!isValidRadius(radius)
@@ -177,24 +186,38 @@ public class Ship implements IShip {
 		
 		try{ if(!isValidRadius(radius)){
 			
-			throw new illegalRadiusException();
+			throw new IllegalRadiusException();
 			
 		}
 		
 		this.radius = radius;
 		}
 		
-		catch(illegalRadiusException exc){
+		catch(IllegalRadiusException exc){
 			
-			this.setRadius(1);
+			this.setRadius(15);
 			
 		}
 	}
 	
 	/**
+	 * Check whether the given radius is a valid radius. In other words, check whether it is
+	 * higher than 0 and less than or equal to 10.
+	 *
+	 * @param radius
+	 *        the radius to be checked in km.
+	 * @return true if and only if the given radius is higher than 0 and less than or equal to 10.
+	 *         |result == (!Util.fuzzyLessThanOrEqualTo(radius, 0)) && Util.fuzzyLessThanOrEqualTo(radius, 10))
+	 */
+	public boolean isValidRadius(double radius){
+		
+		return (!Util.fuzzyLessThanOrEqualTo(radius, 10));
+	
+	}
+	/**
 	 * Moves the ship during a fixed amount of time.
 	 * @param elapsedTime
-	 * 		  amount of time during which the ship is moving
+	 * 		  amount of time during which the ship is moving in seconds.
 	 * @post The position of the ship has been changed according to the previous position,
 	 * 		   the current velocity of the ship and the given duration elapsedTime. 
 	 * 		   |(new this).getPos() == this.getPos().add(new Position(vel.getVelX()*elapsedTime, vel.getVelY()*elapsedTime));
@@ -205,7 +228,7 @@ public class Ship implements IShip {
 	 * TODO exceptions checken.
 	 */
 	
-	public void Move(double elapsedTime) throws NegativeTimeException{
+	public void move(double elapsedTime) throws NegativeTimeException{
 		
 		try{if(!isValidElapsedTime(elapsedTime)){
 			
@@ -223,7 +246,7 @@ public class Ship implements IShip {
 	/** 
 	 * Check whether the given time is a valid amount of time. 
 	 * @param time
-	 *        the amount of time to be checked
+	 *        the amount of time to be checked in seconds.
 	 * @return true if and only if the given time is greater than or equal to zero.
 	 *         | result == !(time<0)
 	 *        
@@ -236,6 +259,7 @@ public class Ship implements IShip {
 	 * Check whether the given velocity is a valid velocity. In other words, check whether its 
 	 * norm is less than or equal to the speed of light.
 	 * @param velocity
+	 *        The velocity to be checked.
 	 * @return true if and only if the given velocity's norm is less than or equal to the speed
 	 *         of light.
 	 *         |result == (velocity.getNorm()<=Velocity.getSpeedOfLight())
@@ -298,8 +322,8 @@ public class Ship implements IShip {
 	}
 	
 	/**
-	 * Correct a given velocity vector speed, which has a norm that is bigger than the speed
-	 * of light, to a velocity vector with the same direction and a norm equal to the speed 
+	 * Correct a given velocity vector speed (which has a norm that is bigger than the speed
+	 * of light) to a velocity vector with the same direction and a norm equal to the speed 
 	 * of light.
 	 * @param speed
 	 *        The velocity vector that is to be corrected.
