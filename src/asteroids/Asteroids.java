@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
+import asteroids.*;
 import asteroids.model.Facade;
 
 @SuppressWarnings("serial")
@@ -120,7 +121,6 @@ public class Asteroids extends JFrame {
       System.out.println("no screen detected");
       return;
     } else {
-      
       IFacade facade = new Facade();
       
       GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();

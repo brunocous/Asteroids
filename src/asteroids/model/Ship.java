@@ -123,7 +123,6 @@ public class Ship implements IShip {
 	 */
 	@Basic
 	public void setVel(Velocity vel) {
-		// TODO
 		if (isValidVelocity(vel)){
 			
 			this.vel = vel;
@@ -348,7 +347,9 @@ public class Ship implements IShip {
 	 *         | result == new Velocity (speed.getVelX()/(speed.getNorm()/Velocity.getSpeedOfLight()),speed.getVelY()/(speed.getNorm()/Velocity.getSpeedOfLight()))
 	 *         
 	 */
-	public Velocity correctSpeed(Velocity speed){
+	
+	//TODO Mag dit private??
+	private Velocity correctSpeed(Velocity speed){
 		
 		double correctingFactor = speed.getNorm()/Velocity.getSpeedOfLight();
 		Velocity correctedSpeed = new Velocity (speed.getVelX()/correctingFactor,speed.getVelY()/correctingFactor);
