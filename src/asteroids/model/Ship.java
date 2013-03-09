@@ -152,16 +152,35 @@ public class Ship implements IShip {
 	 * 
 	 * @param direction
 	 *        the new direction for this ship in radians.
-	 * @post if the given direction is less than 2*Pi radians, the new direction for this 
+	 * @post if the given direction is between -Pi and Pi radians, the new direction for this 
 	 *       ship is equal to the given direction. Else the new direction for this ship is
-	 *       equal to the equivalent angle of the given direction (angle) that is less than 
-	 *       or equal to 2*Pi.
-	 *       |	new.direction == direction%(2*Math.PI);
+	 *       equal to the equivalent angle of the given direction (angle) that is between -Pi and Pi.
+	 *       |	if(Util.fuzzyLessThanOrEqualTo((Math.abs(direction)/Math.PI)%2 ,1))
+	 *		 |  then this.direction = directionModPi;
+	 *	     |  else if(!Util.fuzzyLessThanOrEqualTo(direction%(Math.PI),0))
+	 *		 |  then this.direction = -(Math.PI-direction%(Math.PI));
+	 *		 |  else this.direction = Math.PI + direction%(Math.PI);
 	 */
 	@Basic
 	public void setDirection(double direction) {
 		
-		this.direction = direction%(2*Math.PI);
+		double directionModPi = direction%(Math.PI);
+		
+		if(Util.fuzzyLessThanOrEqualTo((Math.abs(direction)/Math.PI)%2 ,1)){
+			
+			this.direction = directionModPi;
+			
+		}
+		else if(!Util.fuzzyLessThanOrEqualTo(directionModPi,0)){
+			
+			this.direction = -(Math.PI-directionModPi);
+			
+		}
+		else {
+			
+			this.direction = Math.PI + directionModPi;
+			
+		}
 		
 	}
 

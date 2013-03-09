@@ -44,7 +44,7 @@ public class ShipTest {
 		positiveInfiniteVelocity = new Velocity(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 		
 		speedOfLightShip = new Ship(positivePosition, speedOfLightVelocity, 0 , 15);
-		negativeVelocityShip = new Ship(positivePosition, negativeVelocity, 0,15);
+		negativeVelocityShip = new Ship(positivePosition, negativeVelocity, 0 , 15);
 		negativeSpeedOfLightVelocityShip = new Ship(positivePosition, negativeSpeedOfLightVelocity, 0, 15);
 		zeroVelocityShip = new Ship(positivePosition, zeroVelocity, 0,15);
 		positiveVelocityShip = new Ship(positivePosition, positiveVelocity, 0,15);
