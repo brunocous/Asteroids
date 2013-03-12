@@ -21,6 +21,8 @@ public class Ship implements IShip {
 	/**
 	 * Initialize this new ship with given pos, vel, direction and radius.
 	 * 
+	 * @pre   the given direction must be a valid direction.
+	 * 		  | isValidDirection(direction)
 	 * @param pos
 	 *        the position for this new ship.
 	 * @param vel
@@ -150,37 +152,35 @@ public class Ship implements IShip {
 	/**
 	 * Set the direction of this ship to the given direction.
 	 * 
+	 * @pre	 the value of the given direction must be greater than -Pi and less than or equal to Pi.
+	 * 		 |	isValidDirection(direction)
 	 * @param direction
 	 *        the new direction for this ship in radians.
-	 * @post if the given direction is between -Pi and Pi radians, the new direction for this 
-	 *       ship is equal to the given direction. Else the new direction for this ship is
-	 *       equal to the equivalent angle of the given direction (angle) that is between -Pi and Pi.
-	 *       |	if(Util.fuzzyLessThanOrEqualTo((Math.abs(direction)/Math.PI)%2 ,1))
-	 *		 |  then this.direction = directionModPi;
-	 *	     |  else if(!Util.fuzzyLessThanOrEqualTo(direction%(Math.PI),0))
-	 *		 |  then this.direction = -(Math.PI-direction%(Math.PI));
-	 *		 |  else this.direction = Math.PI + direction%(Math.PI);
+	 * @post the new direction for this ship is the given direction
+	 *       |	new.getDirection() = direction
 	 */
+	@Raw
 	@Basic
 	public void setDirection(double direction) {
 		
-		double directionModPi = direction%(Math.PI);
+		assert(isValidDirection(direction));
+		this.direction = direction;
 		
-		if(Util.fuzzyLessThanOrEqualTo((Math.abs(direction)/Math.PI)%2 ,1)){
-			
-			this.direction = directionModPi;
-			
-		}
-		else if(!Util.fuzzyLessThanOrEqualTo(directionModPi,0)){
-			
-			this.direction = -(Math.PI-directionModPi);
-			
-		}
-		else {
-			
-			this.direction = Math.PI + directionModPi;
-			
-		}
+	}
+	
+	/** 
+	 * Check whether the given direction is a valid direction.
+	 * 
+	 * @param direction
+	 *        the direction to be checked in radians.
+	 * @return true if and only if the given direction is greater than -Pi and less than or equal to
+	 * 		   Pi.
+	 *         | result == (direction > -Math.PI) && (direction <= Math.PI)
+	 *        
+	 */
+	private boolean isValidDirection(double direction){
+		
+		return (direction > -Math.PI) && (direction <= Math.PI);
 		
 	}
 
@@ -209,7 +209,6 @@ public class Ship implements IShip {
 	 *         |!isValidRadius(radius)
 	 * 
 	 */
-	//TODO straal mag enkel positief zijn? ---> ja
 	@Basic
 	public void setRadius(double radius) {
 		
@@ -254,8 +253,6 @@ public class Ship implements IShip {
 	 * @throws NegativeTimeException
 	 *         The given elapsedTime is negative and therefore unvalid.
 	 *         |!isValidElapsedTime()
-	 * 
-	 * TODO exceptions checken.
 	 */
 	
 	public void move(double elapsedTime) throws NegativeTimeException{
@@ -305,14 +302,18 @@ public class Ship implements IShip {
 	 * 
 	 * @param angle
 	 * 		  The angle (in radians) to be added to the current direction of the ship
-	 * @post the new direction of the ship is the previous direction plus
-	 *       the given angle. If adding the angle to the previous direction leads to a 
-	 *       result higher than 2*Pi, the new direction will be that result in its simplest form.
-	 *       |(new this).getDirection()== (this.getDirection()+ angle)%(2*Math.PI)
+	 * @effect the new direction of the ship is the previous direction plus
+	 *       the given angle.
+	 *       |setDirection(this.getDirection()+ angle)
+	 * @note this method has a precondition, namely
+	 * 			isValidDirection(this.getDirection() + direction)
+	 *       the resulting direction must be a valid direction. Other-
+	 * 		 wise it will not be excepted.
 	 */
-	//TODO @pre? 
 	
 	public void turn(double angle){
+		
+		if (isValidDirection(getDirection() ))
 		setDirection(getDirection() + angle);
 	}
 
@@ -321,16 +322,13 @@ public class Ship implements IShip {
 	 * 
 	 * @param amount
 	 * 		  The amount by which the velocity of the ship will be increased
-	 * @throws ExceedsSpeedOfLightException
-	 *         Increasing the speed of the ship by the given amount leads to a new velocity
-	 *         of the ship that exceeds the speed of light.
 	 * @post If increasing the ship's velocity by the given amount does not result into a 
 	 *       velocity that is higher than the speed of light, the ship's new velocity will be 
 	 *       increased by the given amount. If it does exceed the speed of light, the ship's new
 	 *       velocity will be the speed of light.   
 	 *       |if(isValidVelocity((new Velocity(getVel().getVelX(), getVel().getVelY())).add(new Velocity(amount*Math.cos(getDirection()),amount*Math.sin(getDirection()))))
 	 *       |     then (new this).getVel()== this.getVel().add(new Velocity(amount*Math.cos(getDirection()),amount*Math.sin(getDirection())))
-	 *       |else ((new this).getVel().getNorm()==Velocity.getSpeedOfLight())
+	 *       |else ((new this).getVel()= new Velocity (speed.getVelX()/(speed.getNorm()/Velocity.getSpeedOfLight()),speed.getVelY()/(speed.getNorm()/Velocity.getSpeedOfLight()))
 	 * @post The ship's direction will not be changed. 
 	 *       |(new this).getDirection() == this.getDirection()
 	 */
@@ -340,19 +338,17 @@ public class Ship implements IShip {
 		Velocity newSpeed = new Velocity(getVel().getVelX(), getVel().getVelY());
 		newSpeed.add(gainedSpeed);
 		
-		try{if(!isValidVelocity(newSpeed)){
-			
-			throw new ExceedsSpeedOfLightException();
-		}
-		
-		vel.add(gainedSpeed);
-		}
-		catch(ExceedsSpeedOfLightException tohigh){
+		if(!isValidVelocity(newSpeed)){
 			
 			Velocity result = correctSpeed(newSpeed);
 			setVel(result);
 		}
+		else{
 		
+		vel.add(gainedSpeed);
+		
+		}
+
 	}
 	
 	/**
@@ -384,6 +380,9 @@ public class Ship implements IShip {
 	 * 	      The first ship of which the position will be compared to the given Ship ship2
 	 * @param ship2
 	 *        The second ship of which the position will be compared to the given Ship ship1
+	 * @throws SameShipException
+	 * 		   the given ships are the same ship.
+	 *         | ship1 == ship2
 	 * @return The distance between the outer side of ship1 and ship2 if ship1 and ship2 are different ships, 
 	 *         0.0 if ship1 and ship2 are the same ship. 
 	 *         The result will be negative if ship1 and ship2 overlap.
@@ -394,18 +393,22 @@ public class Ship implements IShip {
 	public static double getDistanceBetween(Ship ship1, Ship ship2){
 		
 		double result;
-		if(ship1==ship2){
-			result= 0.0;
+		try {if(ship1==ship2){
+			throw new SameShipException();
 		}
 		
-		else{
-			
 		double distanceBetweenCentres = ship1.getPos().getDistanceTo(ship2.getPos());
 		double sumOfRadii= ship1.getRadius()+ship2.getRadius();
 		double distance = distanceBetweenCentres - sumOfRadii;
 		result = distance;
-		
 		}
+		
+		catch(SameShipException exc){
+			
+			result = 0;
+			
+		}
+		
 		return result;
 		
 	}
@@ -416,6 +419,9 @@ public class Ship implements IShip {
 	 * 	      The first ship of which the position will be compared to the position of ship2
 	 * @param ship2
 	 * 	      The second ship of which the position will be compared to the position of ship1
+	 * @throws SameShipException
+	 * 		   the given ships are the same ship.
+	 * 		   | ship1 == ship2
 	 * @return true if and only if ship1 and ship2 are the same ship or the distance between
 	 *         ship1 and ship2 is less than zero. 
 	 *         | if( ship1==ship2 || (asteroids.Util.fuzzyLessThanOrEqualTo(getDistanceBetween(ship1,ship2),0) && !asteroids.Util.fuzzyEquals(getDistanceBetween(ship1,ship2), 0)))
@@ -424,20 +430,25 @@ public class Ship implements IShip {
 	 */
 	public static boolean overlap(Ship ship1, Ship ship2){
 		
-		boolean result;
-		if(ship1==ship2){
+		boolean result =false;
+		try{ if(ship1==ship2){
 			
-			result= true;
+			throw new SameShipException();
 			
-		} else if(asteroids.Util.fuzzyLessThanOrEqualTo(getDistanceBetween(ship1,ship2),0) && !asteroids.Util.fuzzyEquals(getDistanceBetween(ship1,ship2), 0)){
-			
-			result= true;
-			
-		} else {
-			
-			result= false;
+		} 
+				if(asteroids.Util.fuzzyLessThanOrEqualTo(getDistanceBetween(ship1,ship2),0) && !asteroids.Util.fuzzyEquals(getDistanceBetween(ship1,ship2), 0)){
+					
+					result= true;
+					
+				} 
 		}
 		
+		catch(SameShipException exc){
+			
+			result = true;
+			
+		}
+		  
 		return result;
 		
 	}
@@ -470,16 +481,25 @@ public class Ship implements IShip {
 	 * 		  The first ship that will or will not collide with ship2 after an amount of time.
 	 * @param ship2
 	 * 		  The second ship that will or will not collide with ship1 after an amount of time.
+	 * @throws SameShipException
+	 * 		   the given ships are the same ship
+	 * 		   | ship1==ship2
 	 * @return The amount of time (in seconds) it will take for ship1 and ship2 to collide or 
 	 * 	       POSITIVE_INFINITY if they will never collide (given their current position and 
 	 *         velocity). 
-	
 	 * 
 	 */
-	//TODO @return, @throws illegalArgument als ship1 en ship2 naar hetzelfde schip verwijzen?
 	                      
 	
 	public static double getTimeToCollision(Ship ship1, Ship ship2){
+		
+		double result;
+		
+		try{ if(ship1 == ship2) {
+			
+			throw new SameShipException();
+			
+		}
 		
 		double deltavx = ship2.getVel().getVelX()- ship1.getVel().getVelX();
 		double deltavy = ship2.getVel().getVelY()- ship1.getVel().getVelY();
@@ -487,7 +507,6 @@ public class Ship implements IShip {
 		double deltary = ship2.getPos().getPosY()- ship1.getPos().getPosY();
 		double sigma = ship1.getRadius()+ship2.getRadius();
 		double d = Math.pow(scalarProduct(deltavx, deltavy, deltarx, deltary), 2)-scalarProduct(deltavx,deltavy,deltavx,deltavy)*(scalarProduct(deltarx,deltary,deltarx,deltary)-Math.pow(sigma, 2));
-		double result;
 		
 		if(Util.fuzzyLessThanOrEqualTo(-scalarProduct(deltavx,deltavy,deltarx,deltary),0) || Util.fuzzyLessThanOrEqualTo(d,0) ){
 			result = Double.POSITIVE_INFINITY;
@@ -496,6 +515,14 @@ public class Ship implements IShip {
 			result = -(scalarProduct(deltavx, deltavy, deltarx,deltary)+Math.sqrt(d))/scalarProduct(deltavx,deltavy,deltavx,deltavy);
 			
 		}
+		}
+		
+		catch(SameShipException exc){
+			
+			result = Double.POSITIVE_INFINITY;
+			
+		}
+		
 		return result;
 	}
 	
@@ -509,6 +536,9 @@ public class Ship implements IShip {
 	 * @param ship2
 	 *        The second ship of which we want to know at which position it will collide with
 	 *        ship1.
+	 * @throws SameShipException
+	 * 		   the given ships are the same ship.
+	 * 		   | ship1==ship2
 	 * @return The position where ship1 and ship2 will collide if they will collide eventually 
 	 *         or 'null' if ship1 and ship2 will never collide. 
 	 *         | if(deltaT==Double.POSITIVE_INFINITY)
@@ -518,8 +548,13 @@ public class Ship implements IShip {
 	
 	public static Position getCollisionPosition(Ship ship1, Ship ship2){
 		
+		Position result = null;
+		
+		try{ if(ship1 == ship2){
+			throw new SameShipException();
+		}
+		
 		double deltaT= getTimeToCollision(ship1,ship2);
-		Position result= null;
 		
 		if(deltaT==Double.POSITIVE_INFINITY){
 			
@@ -535,6 +570,13 @@ public class Ship implements IShip {
 			result= collisionPoint;
 			
 		}
+		}
+		catch(SameShipException exc){
+			
+			result = null;
+			
+		}
+	
 		return result;
 		}
 		

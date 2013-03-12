@@ -36,9 +36,9 @@ public class ShipTest {
 		infiniteNegativePosition = new Position(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
 		fiftyXPosition = new Position(50,0);
 		
-		speedOfLightVelocity = new Velocity(Velocity.getSpeedOfLight(),Velocity.getSpeedOfLight());
+		speedOfLightVelocity = new Velocity(Velocity.getSpeedOfLight(),0);
 		negativeVelocity = new Velocity(-50,-50);
-		negativeSpeedOfLightVelocity = new Velocity(-Velocity.getSpeedOfLight(),-Velocity.getSpeedOfLight());
+		negativeSpeedOfLightVelocity = new Velocity(-Velocity.getSpeedOfLight(),0);
 		zeroVelocity = new Velocity(0,0);
 		positiveVelocity = new Velocity(50,50);
 		positiveInfiniteVelocity = new Velocity(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);

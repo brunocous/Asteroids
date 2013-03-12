@@ -61,7 +61,7 @@ public class Facade implements IFacade{
 		Ship castedShip = (Ship) ship;
 		return castedShip.getDirection();
 	}
-
+//TODO exceptions omvormen naar modelexceptions??
 	@Override
 	public void move(IShip ship, double dt) {
 		try{ Ship castedShip = (Ship) ship;
